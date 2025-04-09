@@ -1,0 +1,28 @@
+deployment:
+    role: data_plane
+    role_data_plane:
+        config_provider: yaml
+
+routes:
+    - id: 1
+      methods: ["GET"]
+      host: "example.com"
+      uri: "/anything/*"
+      upstream:
+          type: "roundrobin"
+          nodes:
+              "httpbin.org:80": 1
+    - id: 2
+      methods: ["GET"]
+      uri: "/movies/*"
+      upstream:
+          type: "roundrobin"
+          nodes:
+              "movie_service:8000": 1
+
+upstreams:
+    - id: "movie_service_upstream"
+      type: "roundrobin"
+      nodes:
+          "movie_service:8000": 1
+#END

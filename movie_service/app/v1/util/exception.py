@@ -2,7 +2,7 @@ from fastapi import Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from movie_service.app.main import app
+from main import app
 
 
 class CustomResponse(BaseModel):

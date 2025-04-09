@@ -2,8 +2,8 @@ import uuid
 from sqlmodel import Session, select
 from typing import Optional
 from pydantic import ValidationError
-from movie_service.app.v1.model.movie import Movie
-from movie_service.app.v1.schema.request import MovieCreate
+from app.v1.model.movie import Movie
+from app.v1.schema.request import MovieCreate
 
 
 def get_movie_by_id(session: Session, movie_id: uuid):
@@ -11,7 +11,8 @@ def get_movie_by_id(session: Session, movie_id: uuid):
     result = session.exec(stmt).first()
     return result
 
-def fetch_movies(session: Session, title: Optional[str]= None):
+
+def fetch_movies(session: Session, title: Optional[str] = None):
     stmt = select(Movie)
 
     if title:
@@ -19,6 +20,7 @@ def fetch_movies(session: Session, title: Optional[str]= None):
 
     results = session.exec(stmt).all()
     return results
+
 
 def create_movie(session: Session, new_movies: MovieCreate):
     movie = Movie.model_validate(new_movies)
@@ -28,6 +30,7 @@ def create_movie(session: Session, new_movies: MovieCreate):
     session.refresh(movie)
 
     return movie
+
 
 def update_movie(session: Session, new_movie: MovieCreate, movie_id: uuid):
     current_movie = get_movie_by_id(session=session, movie_id=movie_id)

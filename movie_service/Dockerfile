@@ -1,14 +1,19 @@
 FROM python:3.10-alpine
 
+
+COPY ./requirements.txt ./requirements.txt
+
 WORKDIR /app
 
-COPY ./requirements.txt /app/requirements.txt
+COPY ./requirements.txt ./requirements.txt
 
-RUN pip install -r /app/requirements.txt \
+RUN pip install --upgrade pip
+
+RUN pip install -r ./requirements.txt \
     && rm -rf /root/.cache/pip
 
 EXPOSE 8000
 
-COPY . /app/
+COPY . .
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

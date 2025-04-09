@@ -1,5 +1,6 @@
 from sqlmodel import Field
-from movie_service.app.v1.model.base import CustomBaseModel
+from app.v1.model.base import CustomBaseModel
+
 
 class Movie(CustomBaseModel, table=True):
     title: str = Field(max_length=255)

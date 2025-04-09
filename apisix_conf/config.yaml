@@ -25,6 +25,10 @@ apisix:
         port: 9092
 
 deployment:
+    role: data_plane
+    role_data_plane:
+        config_provider: yaml
+
     admin:
         allow_admin: # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
             - 0.0.0.0/0 # We need to restrict ip access rules for security. 0.0.0.0/0 is for test.
@@ -40,7 +44,7 @@ deployment:
 
     etcd:
         host: # it's possible to define multiple etcd hosts addresses of the same etcd cluster.
-            - "http://etcd:2397" # multiple etcd address
+            - "http://etcd:2379" # multiple etcd address
         prefix: "/apisix" # apisix configurations prefix
         timeout: 30 # 30 seconds
 
