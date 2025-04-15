@@ -69,47 +69,22 @@ services:
         networks:
             - apisix
     apisix:
-        image: apache/apisix:latest
+        build:
+            context: ./custom_apisix
+            dockerfile: Dockerfile
         restart: always
         volumes:
             - ./apisix_log:/usr/local/apisix/logs
             - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
             - ./apisix_conf/apisix.yaml:/usr/local/apisix/conf/apisix.yaml:ro
+            - ./apisix_plugins:/usr/local/apisix/plugins
         ports:
             - "9180:9180/tcp" # admin port
             - "9080:9080/tcp"
-            - "9091:9091/tcp"
-            - "9443:9443/tcp"
-            - "9094:9092/tcp"
         environment:
             - APISIX_STAND_ALONE=true # Tắt chế độ standalone
-        networks:
-            - apisix
-    prometheus:
-        image: prom/prometheus:v2.25.0
-        restart: always
-        volumes:
-            - ./prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
-        ports:
-            - "9090:9090"
-        networks:
-            - apisix
-    grafana:
-        image: grafana/grafana:7.3.7
-        restart: always
-        ports:
-            - "3000:3000"
-        volumes:
-            - "./grafana_conf/provisioning:/etc/grafana/provisioning"
-            - "./grafana_conf/dashboards:/var/lib/grafana/dashboards"
-            - "./grafana_conf/config/grafana.ini:/etc/grafana/grafana.ini"
         networks:
             - apisix
 
 networks:
     apisix:
-        driver: bridge
-
-volumes:
-    etcd_data:
-        driver: local

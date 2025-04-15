@@ -1,10 +1,19 @@
-deployment:
-    role: data_plane
-    role_data_plane:
-        config_provider: yaml
-
 routes:
     - id: 1
+      methods: ["GET", "POST"]
+      uri: "/process"
+      plugins:
+          kafka-sender:
+              topic: "requests"
+              key: "request-${_req_id}"
+      upstream_id: "movie_service_upstream"
+    - id: 2
+      uri: "/ws"
+      plugins:
+      websocket-proxy:
+          enabled: true
+      upstream_id: "movie_service_upstream"
+    - id: 3
       methods: ["GET"]
       host: "example.com"
       uri: "/anything/*"
@@ -12,17 +21,19 @@ routes:
           type: "roundrobin"
           nodes:
               "httpbin.org:80": 1
-    - id: 2
+    - id: 4
       methods: ["GET"]
       uri: "/movies/*"
-      upstream:
-          type: "roundrobin"
-          nodes:
-              "movie_service:8000": 1
+      upstream_id: "movie_service_upstream"
 
 upstreams:
     - id: "movie_service_upstream"
       type: "roundrobin"
       nodes:
           "movie_service:8000": 1
+
+    - id: "kafka_service_upstream"
+      type: "roundrobin"
+      nodes:
+          "broker:29092": 1
 #END

@@ -1,1 +1,0 @@
-/opt/bitnami/kafka/bin
