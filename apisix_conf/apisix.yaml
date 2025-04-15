@@ -22,18 +22,17 @@ routes:
           nodes:
               "httpbin.org:80": 1
     - id: 4
-      methods: ["GET"]
+      methods: ["GET", "POST", "PUT", "DELETE"]
       uri: "/movies/*"
       upstream_id: "movie_service_upstream"
+      plugins:
+          kafka-sender:
+              topic: "requests"
+              key: "request-${_req_id}"
 
 upstreams:
     - id: "movie_service_upstream"
       type: "roundrobin"
       nodes:
           "movie_service:8000": 1
-
-    - id: "kafka_service_upstream"
-      type: "roundrobin"
-      nodes:
-          "broker:29092": 1
 #END

@@ -49,7 +49,7 @@ async def get_movies(
 @movie_router.post("/", response_model=CustomResponse)
 async def create_movie(*, session: SessionDep, movie_create: MovieCreate):
     try:
-        rs = create_new_movie(session=session, movie_create=movie_create)
+        rs = create_new_movie(session=session, new_movies=movie_create)
         results = [rs]
         return CustomResponse(
             status_code=status.HTTP_201_CREATED,
